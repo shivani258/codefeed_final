@@ -245,8 +245,8 @@ app.post('/saveproblem',isLoggedIn, function(req, res)  {
 
             // check to see if theres already a user with that email
             if (usern) {
+              return done(null, false, req.flash('usernameMessage', 'Username exists!'));
 
-return done(null, false, req.flash('usernameMessage', 'Username exists!'));
             } 
             else
               {

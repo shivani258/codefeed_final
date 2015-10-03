@@ -208,12 +208,10 @@ app.get('/checkprofile', isLoggedIn, function(req, res) {
 });
  
 
-app.get('/updateprofile', isLoggedIn, function(req, res) {
-         res.render('signupprofile.ejs', { message: req.flash('usernameMessage') ,
-failureFlash : true ,
-            user : req.user // get the user out of session and pass to template
+app.get('/updateprofile', function(req, res) {
+
+        res.render('../views/signupprofile.ejs', {message: req.flash('usernameMessage')}); 
         });
-    });
 
 
 app.get('/logout', function(req, res) {
