@@ -82,7 +82,7 @@ app.post('/submit', isLoggedIn, function(req, res)  {
     var language = req.body.language;
     var code = req.body.code;
     var probid=req.body.problemid;
-    var stdin="this_problem_is_being_submitted";
+    var stdin=req.body.stdin;
 console.log("inside compile.."+req.user.username)
     var currentuser=req.user.username;
     //currentuser.toString();
@@ -238,11 +238,28 @@ app.post('/saveproblem',isLoggedIn, function(req, res)  {
 
     var username = req.body.user_username; 
     var uname = req.body.user_name;
-    User.findOne({$or:[{"facebook.email":req.user.facebook.email},{"local.email":req.user.local.email}]}, function (err, user){
+    console.log("received in json:"+username)
+    console.log("current fb email is:"+req.user.facebook.email)
+    console.log("current local email is:"+req.user.local.email)
+
+    if(req.user.local.email==null)
+    {
+    User.findOne({"facebook.email":req.user.facebook.email}, function (err, user){
+      console.log("Match found with email"+req.user.facebook.email)
       user.name = uname;
       user.username = username;
       user.save();
   });
+}
+else
+{
+    User.findOne({"local.email":req.user.local.email}, function (err, user){
+      console.log("Match found with email "+req.user.local.email)
+      user.name = uname;
+      user.username = username;
+      user.save();
+  });
+}
 });
 
 //load our routes and pass in our app and fully configured passport
