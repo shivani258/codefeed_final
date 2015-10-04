@@ -234,34 +234,15 @@ app.post('/saveproblem',isLoggedIn, function(req, res)  {
   
 });
 
-  app.post('/saveprofile', isLoggedIn, function(req, res)  {
-    var userusername = req.body.user_username; 
-    console.log("this is "+userusername)
-    var username = req.body.user_name;
-    User.findOne({"username":userusername}, function(err, usern) {
-            // if there are any errors, return the error
-            if (err)
-                throw err;
+ app.post('/saveprofile', isLoggedIn, function(req, res)  {
 
-            // check to see if theres already a user with that email
-            if (usern) {
-              
-
-            } 
-            else
-              {
-
-
-   User.findOne({$or:[{"facebook.email":req.user.facebook.email},{"local.email":req.user.local.email}]}, function (err, user){
-
-  user.name = username;
-  user.username=userusername;
-  user.save();
-});
-}
-              });
-
-
+    var username = req.body.user_username; 
+    var uname = req.body.user_name;
+    User.findOne({$or:[{"facebook.email":req.user.facebook.email},{"local.email":req.user.local.email}]}, function (err, user){
+      user.name = uname;
+      user.username = username;
+      user.save();
+  });
 });
 
 //load our routes and pass in our app and fully configured passport

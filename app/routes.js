@@ -198,7 +198,7 @@ app.get('/checkprofile', isLoggedIn, function(req, res) {
         var mongoose = require('mongoose');
         var User = require('../app/models/user');
         console.log("Current username is: "+req.user.username)
-        if((req.user.username || req.user.name) == null){
+        if((req.user.username ==null)|| (req.user.name == null)){
             res.redirect('/updateprofile')
         }
         else{
