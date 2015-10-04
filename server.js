@@ -78,11 +78,13 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 
-app.post('/submit', isLoggedIn, function(req, res)  {
+
+app.post('/compile', isLoggedIn, function(req, res)  {
     var language = req.body.language;
     var code = req.body.code;
-    var probid=req.body.problemid;
-    var stdin=req.body.stdin;
+  var probid=req.body.problemid;
+  var stdin;
+
 console.log("inside compile.."+req.user.username)
     var currentuser=req.user.username;
     //currentuser.toString();
@@ -95,7 +97,13 @@ console.log("inside compile.."+req.user.username)
     var timeout_value=20;//Timeout Value, In Seconds
     var result;
     var statement;
-     
+     Problems.findOne({ "problemid": probid }, function(err, problem) {
+  if (err) throw err;
+ 
+  console.log("found the problem "+problem)
+
+    var stdin = problem.problem_input;
+});
     //details of this are present in DockerSandbox.js
     var sandboxType = new sandBox(timeout_value,path,folder,vm_name,arr.compilerArray[language][0],arr.compilerArray[language][1],code,arr.compilerArray[language][2],arr.compilerArray[language][3],arr.compilerArray[language][4],stdin, probid, currentuser);
 
@@ -103,6 +111,8 @@ console.log("inside compile.."+req.user.username)
     //data will contain the output of the compiled/interpreted code
     //the result maybe normal program output, list of error messages or a Timeout error
     sandboxType.run(function(data,exec_time,err) {
+      setTimeout(function(){
+      
         
 
 Problems.findOne({ "problem_output": data, "problemid":probid }, function(err, problem) {
@@ -110,13 +120,9 @@ Problems.findOne({ "problem_output": data, "problemid":probid }, function(err, p
  
   console.log(problem)
   // object of the user
-  if(problem!=null)
-  {
-    User.findOneAndUpdate({ "username": currentuser }, { $inc: { "solved_count": 1 }}, function(err, found){
-      console.log("this problem is"+found)
-    });
-
-
+  if(problem!=null){
+            
+            result="success!"
 
             statement=problem.problem_name;
             result="success!"
@@ -135,62 +141,6 @@ Problems.findOne({ "problem_output": data, "problemid":probid }, function(err, p
                 return newSolution;
             })
   }
-  else
-  {
-    result="failed"
-  }
-  
-});
-         function senddata()
-         {
-            res.send({output:result, langid: language,code:code, errors:err, time:exec_time});
-        console.log("Sent!")
-    }
-    setTimeout(senddata, 1000)
-    
-        //console.log("Data: received: "+ data)
-
-    });
-
-
-});
-
-app.post('/compile', isLoggedIn, function(req, res)  {
-    var language = req.body.language;
-    var code = req.body.code;
-    var stdin = req.body.stdin;
-    var probid=req.body.problemid;
-console.log("inside compile.."+req.user.username)
-    var currentuser=req.user.username;
-    //currentuser.toString();
-    //console.log("the currentuser is"+ currentuser)
-   
-    
-    var folder= 'temp/' + random(10); //folder in which the temporary folder will be saved
-    var path=__dirname + "/"; //current working path
-    var vm_name='virtual_machine_codefeed'; //name of virtual machine that we want to execute
-    var timeout_value=20;//Timeout Value, In Seconds
-    var result;
-    var statement;
-     
-    //details of this are present in DockerSandbox.js
-    var sandboxType = new sandBox(timeout_value,path,folder,vm_name,arr.compilerArray[language][0],arr.compilerArray[language][1],code,arr.compilerArray[language][2],arr.compilerArray[language][3],arr.compilerArray[language][4],stdin, probid, currentuser);
-
-
-    //data will contain the output of the compiled/interpreted code
-    //the result maybe normal program output, list of error messages or a Timeout error
-    sandboxType.run(function(data,exec_time,err) {
-        
-
-Problems.findOne({ "problem_output": data, "problemid":probid }, function(err, problem) {
-  if (err) throw err;
- 
-  console.log(problem)
-  // object of the user
-  if(problem!=null){
-            
-            result="success!"
-  }
   else{
     result="failed"
   }
@@ -206,7 +156,7 @@ Problems.findOne({ "problem_output": data, "problemid":probid }, function(err, p
         //console.log("Data: received: "+ data)
 
     });
-
+}, 2000);
 
 });
 
