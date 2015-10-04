@@ -210,9 +210,15 @@ app.get('/checkprofile', isLoggedIn, function(req, res) {
 
 app.get('/updateprofile', function(req, res) {
 
+<<<<<<< HEAD
         res.render('../views/signupprofile.ejs', {
             user : req.user // get the user out of session and pass to template
         }); 
+=======
+        res.render('../views/signupprofile.ejs'), {
+            user : req.user // get the user out of session and pass to template
+        }; 
+>>>>>>> ef0c1246cc0f5a598c67a4e592cec3a674b878e9
         });
 
 
