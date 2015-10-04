@@ -210,7 +210,7 @@ app.get('/checkprofile', isLoggedIn, function(req, res) {
 
 app.get('/updateprofile', function(req, res) {
 
-        res.render('../views/signupprofile.ejs', {message: req.flash('usernameMessage')}); 
+        res.render('../views/signupprofile.ejs'); 
         });
 
 

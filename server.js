@@ -113,7 +113,7 @@ Problems.findOne({ "problem_output": data, "problemid":probid }, function(err, p
   if(problem!=null)
   {
     User.findOneAndUpdate({ "username": currentuser }, { $inc: { "solved_count": 1 }}, function(err, found){
-      console.log(found)
+      console.log("this problem is"+found)
     });
 
 
@@ -168,7 +168,7 @@ console.log("inside compile.."+req.user.username)
     
     var folder= 'temp/' + random(10); //folder in which the temporary folder will be saved
     var path=__dirname + "/"; //current working path
-    var vm_name='virtual_machine'; //name of virtual machine that we want to execute
+    var vm_name='virtual_machine_codefeed'; //name of virtual machine that we want to execute
     var timeout_value=20;//Timeout Value, In Seconds
     var result;
     var statement;
@@ -234,18 +234,18 @@ app.post('/saveproblem',isLoggedIn, function(req, res)  {
   
 });
 
-  app.post('/saveprofile', isLoggedIn, function(req, res, done)  {
+  app.post('/saveprofile', isLoggedIn, function(req, res)  {
     var userusername = req.body.user_username; 
     console.log("this is "+userusername)
     var username = req.body.user_name;
-    User.findOne({"username":req.body.user_username}, function(err, usern) {
+    User.findOne({"username":userusername}, function(err, usern) {
             // if there are any errors, return the error
             if (err)
                 throw err;
 
             // check to see if theres already a user with that email
             if (usern) {
-              return done(null, false, req.flash('usernameMessage', 'Username exists!'));
+              
 
             } 
             else
