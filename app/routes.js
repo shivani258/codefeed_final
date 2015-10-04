@@ -156,9 +156,9 @@ app.get('/showprofile', isLoggedIn, function(req, res) {
 app.get('/showprofile/:username',isLoggedIn, function(req,res){
     var User = require('../app/models/user') ;
     var Solution = require('../app/models/solution') ;
-    User.find({"username": req.params.username}, function(err, docs) {
+    User.find({"username": req.user.username}, function(err, docs) {
         if(!err) {
-                Solution.find({"username": req.params.username}, function(error, docs2) {
+                Solution.find({"username": req.user.username}, function(error, docs2) {
                     if(!error){
                         res.render('../views/profile.ejs', {
                         documents: docs ,
